@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Therapy Platform - Home</title>
+    
+    <style>
+        body {
+            font-family:'Comic Sans MS',cursive;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+            background-attachment: fixed;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #0275d8;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar .left-icons, .navbar .right-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .left-icons a, .navbar .right-icons a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 30px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar .left-icons a:hover, .navbar .right-icons a:hover {
+            background-color: #025aa5;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            border: 2px solid #025aa5;
+        }
+
+        .navbar .left-icons img, .navbar .right-icons img {
+            width: 70px; /* Adjust this size to make the images smaller */
+            height: 70px;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 28px;
+            color: white;
+            font-family: 'Comic Sans MS', cursive;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #00796b;
+            border-radius: 10px;
+            display: inline-block;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .section-title:hover {
+            background: #004d40;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: #66c2ff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #0275d8;
+            font-size: 48px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.0);
+            border-radius: 3px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            font-size: 24px;
+            position: relative;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .info-section:hover {
+            background-color:#ffffff);
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-section div {
+            width: 50%;
+            text-align: left;
+        }
+
+        .info-section img {
+            max-width: 100%;
+            border-radius: 10px;
+            height: 400px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            opacity:0.8
+        }
+
+        .info-section::before {
+            content: '✨';
+            font-size: 4rem;
+            position: absolute;
+            top: 1%;
+            left: 1%;
+            opacity: 0.5;
+        }
+
+        .info-section:nth-of-type(2)::before {
+            content: '🌟';
+            top: 1%;
+            right: 1%;
+        }
+
+        .info-section:nth-of-type(3)::before {
+            content: '🚀';
+            bottom: 1%;
+            left: 1%;
+        }
+
+        .info-section:nth-of-type(4)::before {
+            content: '💡';
+            bottom: 1%;
+            right: 1%;
+        }
+
+        .info-section:nth-of-type(5)::before {
+            content: '🎉';
+            top: 5%;
+            left: 5%;
+            transform: translate(-50%, -50%);
+            opacity: 0.7;
+        }
+
+        .info-section:nth-of-type(6)::before {
+            content: '🤔';
+            bottom: 1%;
+            right: 1%;
+        }
+
+        .questionnaire-link {
+            background-color: #0275d8;
+            color: white;
+            padding: 1rem;
+            font-size: 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: block;
+            width: fit-content;
+            margin: 2rem auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .questionnaire-link:hover {
+            background-color: #025aa5;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .navbar .left-icons, .navbar .right-icons {
+                justify-content: center;
+            }
+
+            .navbar .left-icons a, .navbar .right-icons a {
+                margin: 0.5rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .info-section {
+                flex-direction: column;
+                text-align: center;
+                margin: 1rem 0;
+                padding: 2rem;
+            }
+
+            .info-section div {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .info-section img {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <div class="left-icons">
+                <a href="index.html"></a>
+                <a href="index.html">Home</a>
+            </div>
+            <div class="right-icons">
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <u><h1 style="font-family:fantasy;" style="font-size:36px;">Welcome to SwarSparsh</h1></u>
+            <p>Improving communication through innovative teletherapy.</p>
+              
+            <!-- Information Section 1 -->
+            <div class="info-section">
+                <div>
+                    <h2>About Our Platform</h2>
+                   <b><p>Speech therapy helps individuals overcome communication disorders like articulation, fluency, and language difficulties. Our website offers a comprehensive solution by providing personalized assessments and interactive virtual therapy sessions led by certified speech-language pathologists. Users can track their progress through detailed reporting tools, ensuring effective and targeted therapy. Our resource library offers exercises for at-home practice, and flexible scheduling makes therapy accessible for all. Additionally, our platform fosters a supportive community, allowing users to connect with others for encouragement. We make speech therapy convenient, effective, and tailored to each individual’s needs.</p></b>
+                </div>
+                <img src="images/logo.jpg" alt="about us Icons">
+            </div>
+
+            <!-- Information Section 2 -->
+            <div class="info-section">
+                <img src="images/therapy-session.jpg" alt="therapy session Icons">
+                <div>
+                    <h2>Our Therapy Sessions</h2>
+                  <b><p>Our therapy sessions are dynamic and customized to address a range of speech and language challenges, from stuttering to phonological disorders. Leveraging advanced technology, our sessions are interactive, using virtual tools to engage clients in fun, educational activities. Our therapists are experts in evidence-based practices, ensuring each session is productive and goal-oriented. We offer both individual and group sessions to cater to different preferences and needs. Whether you prefer a private session or a group environment, our platform provides flexibility and support, making speech therapy a positive and rewarding experience.</p></b>
+                </div>
+            </div>
+
+            <!-- Information Section 3 -->
+            <div class="info-section">
+                <div>
+                    <h2>Our Therapists</h2>
+                   <b><p>Our speech therapists are highly skilled and compassionate experts dedicated to transforming lives through the power of communication. As certified speech-language pathologists, they blend cutting-edge techniques with personalized care to address a wide range of communication challenges, from articulation and fluency to language and social skills. Our therapists are not just professionals; they are passionate advocates for your voice, committed to helping you or your loved one achieve clear, confident communication. With a deep understanding of the unique needs of each client, they craft tailored therapy plans that inspire progress and unlock the full potential of every individual.</p></b>
+                </div>
+                <img src="images/therapists.jpg" alt="Our Therapists Icons">
+            </div>
+
+            <!-- Information Section 4 -->
+            <div class="info-section">
+                <img src="images/technology.jpg" alt="technology Icons">
+                <div>
+                    <h2>Our Technology</h2>
+                    <p><b>Our cutting-edge technology revolutionizes speech therapy, making it accessible and engaging for all age groups. Our intelligent chatbot provides instant support, helping users practice speech exercises and address common issues anytime, anywhere. Patients can seamlessly connect with a certified therapist for personalized guidance or schedule video call sessions for more in-depth consultations. Our platform also offers interactive games designed to improve fluency and articulation in a fun, engaging way. Whether you're practicing independently or seeking expert advice, our technology ensures you have the tools and support needed to enhance your communication skills effectively.</p></b>
+                </div>
+            </div>
+
+            <!-- Information Section 5 -->
+            <div class="info-section">
+                <div>
+                    <h2>Success Stories</h2>
+                   <b><p> Nothing makes us more happy than to share the success stories of our clients who have made significant improvements in their communication skills through our platform and very skilled therapists. Their experiences highlight the effectiveness of our therapy programs.</p></b>
+                </div>
+                <img src="images/success-stories.png" alt="success stories Icons">
+            </div>
+
+            <!-- Information Section 6 -->
+            <div class="info-section">
+                <img src="images/faq.png" alt="faq Icons">
+                <div>
+                    <h2>FAQs</h2>
+                   <b><p>Find answers to frequently asked questions about our services, therapy sessions, and technology. Our FAQ section helps you get the information you need quickly and easily.</p></b>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questionnaire Section -->
+            <a href="questionnaire.html" class="questionnaire-link">Take our Questionnaire to find the right therapy for you!</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform. All rights reserved. | <a href="contact_us.html">Contact Us</a></p>
+        </div>
+    </div>
+</body>
+</html>

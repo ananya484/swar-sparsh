@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Speech Therapy Platform</title>
+    <style>
+        /* Existing CSS styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            color: #0275d8;
+            margin-bottom: 1rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #0275d8;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #025aa5;
+        }
+
+        p {
+            margin: 0.5rem 0;
+        }
+
+        a {
+            color: #0275d8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .back-to-home {
+            display: block;
+            margin: 1rem 0;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .feedback {
+            margin: 10px 0;
+            color: red;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="index.html" class="back-to-home">&larr; Back to Home</a>
+        <h1>Login</h1>
+        <div id="feedback" class="feedback"></div>
+        <form id="loginForm">
+            <label for="userType">Select User Type:</label>
+            <select id="userType" name="userType">
+                <option value="patient">Patient</option>
+                <option value="therapist">Therapist</option>
+            </select>
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername" name="loginUsername" required>
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="loginPassword" required>
+            <button type="button" onclick="login()">Login</button>
+            <p><a href="forgot_password.html">Forgot Password?</a></p>
+            <p>Don't have an account? <a href="signup.html">Create an account</a></p>
+            <button type="button" onclick="exportDataToCSV()">Export User Data</button>
+        </form>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html">Contact Us</a></p>
+    </div>
+
+    <script>
+        // Open (or create) the database
+        const dbName = "UserDatabase";
+        let db;
+
+        const request = indexedDB.open(dbName, 1);
+
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            if (!db.objectStoreNames.contains("users")) {
+                db.createObjectStore("users", { keyPath: "username" });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+        };
+
+        request.onerror = (event) => {
+            console.error("Database error:", event.target.error);
+        };
+
+        function saveUserData(username, password, userType) {
+            const transaction = db.transaction("users", "readwrite");
+            const store = transaction.objectStore("users");
+            const user = {
+                username: username,
+                password: password,
+                userType: userType
+            };
+
+            const request = store.put(user);
+
+            request.onsuccess = () => {
+                console.log("User data updated or saved.");
+            };
+
+            request.onerror = (event) => {
+                console.error("Save error:", event.target.error);
+            };
+        }
+
+        function validateUsername(username) {
+            // Basic username validation
+            return username.length > 0;
+        }
+
+        function validatePassword(password) {
+            // Simple password strength check
+            const strength = document.getElementById('feedback');
+            if (password.length < 6) {
+                strength.textContent = 'Password is too short. Must be at least 6 characters.';
+                return false;
+            } else if (!/[A-Z]/.test(password)) {
+                strength.textContent = 'Password must contain at least one uppercase letter.';
+                return false;
+            } else if (!/[0-9]/.test(password)) {
+                strength.textContent = 'Password must contain at least one number.';
+                return false;
+            }
+            strength.textContent = '';
+            return true;
+        }
+
+        function login() {
+            const userType = document.getElementById('userType').value;
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!validateUsername(username)) {
+                document.getElementById('feedback').textContent = 'Username cannot be empty.';
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                return;
+            }
+
+            const transaction = db.transaction("users", "readonly");
+            const store = transaction.objectStore("users");
+            const request = store.get(username);
+
+            request.onsuccess = () => {
+                const user = request.result;
+                if (user && user.password === password) {
+                    // Valid credentials, save user data and redirect
+                    saveUserData(username, password, userType);
+                    if (userType === 'patient') {
+                        window.location.href = 'patient.html'; // Redirect to Age and Reason page if details are not provided
+                    } else if (userType === 'therapist') {
+                        window.location.href = 'therapist.html';
+                    }
+                } else {
+                    // Invalid credentials, redirect to signup
+                    document.getElementById('feedback').textContent = 'Invalid credentials. Please sign up.';
+                    setTimeout(() => {
+                        window.location.href = 'signup.html';
+                    }, 2000);
+                }
+            };
+
+            request.onerror = (event) => {
+                console.error("Fetch error:", event.target.error);
+                document.getElementById('feedback').textContent = 'Error fetching user data.';
+            };
+        }
+
+        function exportDataToCSV() {
+            const transaction = db.transaction("users", "readonly");
+            const store = transaction.objectStore("users");
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const users = request.result;
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Username,Password,UserType\n"; // CSV header
+
+                users.forEach(user => {
+                    csvContent += `${user.username},${user.password},${user.userType}\n`;
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "user_data.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            request.onerror = (event) => {
+                console.error("Fetch error:", event.target.error);
+            };
+        }
+
+        // Remove redundant event listener
+        // document.getElementById('loginForm').addEventListener('submit', function(event) {
+        //     event.preventDefault();
+        //     // Existing dummy authentication check
+        // });
+    </script>
+</body>
+</html>

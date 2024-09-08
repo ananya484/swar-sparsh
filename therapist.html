@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapist Dashboard - Speech Therapy Platform</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: COMIC SANS MS;
+            height: 100%;
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+            padding: 15px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: black;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 28px;
+            transition: background 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .navbar a:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer a {
+            color: #e2e6ea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+            font-size: 30px;
+            text-align: center;
+        }
+
+        .info-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+            padding: 5rem;
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            position: relative;
+        }
+
+        .info-section div {
+            width: 45%;
+            text-align: left;
+        }
+
+        .info-section img {
+            max-width: 100%;
+            border-radius: 10px;
+            height: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-section::before {
+            content: '✨';
+            font-size: 4rem;
+            position: absolute;
+            top: 1%;
+            left: 1%;
+            opacity: 0.5;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 1900px;
+            margin: 0 auto;
+        }
+
+        .active {
+            display: block;
+        }
+
+        input, button, textarea {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        .chatbox {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chatbox .messages {
+            width: 100%;
+            height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chatbox .input {
+            display: flex;
+            width: 100%;
+        }
+
+        .chatbox .input input {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .chatbox .input button {
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            color: #007bff;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        /* Adjust the size of images in tab content */
+        .tab-content img {
+            max-width: 150%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <a href="therapist.html" onclick="showSection('home')"><img src="icons/home.png" alt="home Icon">Home</a>
+            <a href="chatbot_therapist.html" onclick="showSection('chatbot')"><img src="icons/chatbot2.png" alt="chatbot2 Icon">Chatbot</a>
+            <a href="forum.html" onclick="showSection('forum')"><img src="icons/forum2.png" alt="forum2 Icon">Discussion Forum</a>
+            <a href="video_call_therapist.html" onclick="showSection('patients')"><img src="icons/sessions.png" alt="sessions Icon">Patients Sessions</a>
+            <a href="partnerships.html" onclick="showSection('notes')"><img src="icons/doctors.png" alt="doctors Icon">Search Doctors</a>
+            <a href="index.html" onclick="logout()">Logout</a>
+            <a href="therapist.html" onclick="showDashboard()">Dashboard</a>
+        </div>
+        <div class="main-content">
+            <div id="home" class="tab-content active">
+                <h2 class="section-title">Welcome, Therapist!</h2>
+                <p>Your personalized therapy dashboard.</p>
+                <!-- Information Section 1 -->
+                <div class="info-section">
+                    <div>
+                        <p>Our platform allows you to monitor patient progress with comprehensive insights and detailed reports. Review session notes, track improvements, and identify areas that need more focus. As a therapist, your role is crucial in guiding patients on their journey to improved mental health and well-being. This dashboard is designed to provide you with the tools and resources you need to deliver exceptional care. Here, you can manage your appointments, review patient progress, and access therapeutic resources all in one place. We aim to make your experience as seamless as possible, allowing you to focus on what you do best—helping your patients achieve their goals. Maintaining confidentiality and privacy is our top priority. Communicate securely with your patients through our encrypted messaging system, ensuring that all conversations are protected. Feel confident knowing that your patient interactions are safe and secure.</p>
+                    </div>
+                    <img src="images/about-us3.png" alt="About Us 3 Image">
+                </div>
+                <!-- Information Section 2 - Webpage Flow and Steps -->
+                <div class="info-section">
+                    <div>
+                        <h3>Webpage Flow and Steps:</h3>
+                        <ol>
+                            <li><strong>Home Dashboard:</strong> Upon logging in, therapists land on the dashboard where they can access all essential tools.</li>
+                            <li><strong>Chatbot Interaction:</strong> Engage with patients through the chatbot for quick consultations or therapy sessions.</li>
+                            <li><strong>Discussion Forum:</strong> Participate in professional discussions, share knowledge, and collaborate with other therapists.</li>
+                            <li><strong>Patient Sessions:</strong> Manage and monitor patient progress, schedule appointments, and review session notes.</li>
+                            <li><strong>Search Doctors:</strong> Find and connect with specialized professionals or partners within the platform.</li>
+                            <li><strong>Session Notes:</strong> Take and save notes during or after sessions to keep a record of patient progress.</li>
+                            <li><strong>Logout and Navigation:</strong> Easily navigate back to the home page or log out of the session securely.</li>
+                        </ol>
+                    </div>
+                </div>
+           
+
+            <div id="chatbot" class="tab-content">
+                <h2 class="section-title">Chatbot Interaction</h2>
+                <div class="chatbox">
+                    <div class="messages" id="messages"></div>
+                    <div class="input">
+                        <input type="text" id="messageInput" placeholder="Type your message here...">
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="forum" class="tab-content">
+                <h2 class="section-title">Discussion Forum</h2>
+                <p>Engage with other therapists and share insights!</p>
+            </div>
+
+            <div id="patients" class="tab-content">
+                <h2 class="section-title">Patient Sessions</h2>
+                <p>Monitor patient progress and manage appointments.</p>
+            </div>
+
+            <div id="notes" class="tab-content">
+                <h2 class="section-title">Session Notes</h2>
+                <textarea placeholder="Write your notes here..."></textarea>
+                <button onclick="saveNotes()">Save Notes</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform. All Rights Reserved. | <a href="contact.html">Contact Us</a></p>
+        </div>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.tab-content').forEach(function (tab) {
+                tab.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            if (message) {
+                const messagesContainer = document.getElementById('messages');
+                const newMessage = document.createElement('div');
+                newMessage.textContent = message;
+                messagesContainer.appendChild(newMessage);
+                messageInput.value = '';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function saveNotes() {
+            alert("Notes saved successfully!");
+        }
+
+        function logout() {
+            alert("Logging out...");
+        }
+
+        function showDashboard() {
+            alert("Returning to Dashboard...");
+        }
+    </script>
+</body>
+</html>

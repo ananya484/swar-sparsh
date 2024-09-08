@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Therapy Questionnaire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f4f8;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .popup.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .popup-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease-out;
+        }
+        .popup.active .popup-content {
+            transform: scale(1);
+        }
+        .popup-content button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .popup-content button:hover {
+            background-color: #0056b3;
+        }
+        .questionnaire {
+            display: none;
+        }
+        .question {
+            display: none;
+            background-color: #fff;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .question.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .question span.emoji {
+            font-size: 2em;
+            display: inline-block;
+        }
+        .question h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #007bff;
+        }
+        .question input, .question textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .interactive {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .interactive button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .interactive button:hover {
+            background-color: #218838;
+        }
+        .game-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .game-buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #17a2b8;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .game-buttons button:hover {
+            background-color: #138496;
+        }
+        .audio-controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .audio-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffc107;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .audio-controls button:hover {
+            background-color: #e0a800;
+        }
+        #audioPlayback {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="languagePopup" class="popup active">
+        <div class="popup-content">
+            <h2>Select Language</h2>
+            <button onclick="setLanguage('en')">English</button>
+            <button onclick="setLanguage('hi')">Hindi</button>
+            <button onclick="setLanguage('mr')">Marathi</button>
+            <button onclick="setLanguage('ta')">Tamil</button>
+            <button onclick="setLanguage('te')">Telugu</button>
+            <button onclick="setLanguage('gu')">Gujarati</button>
+            <button onclick="setLanguage('kn')">Kannada</button>
+        </div>
+    </div>
+
+    <div id="questionnaire" class="container">
+        <div class="header">
+            <img src="https://example.com/logo.png" alt="Logo">
+            <h1 id="questionTitle">Welcome to the Speech Therapy Questionnaire</h1>
+        </div>
+        
+        <div class="question" id="question1">
+            <h2 id="labelName"></h2>
+            <input type="text" id="answerName" placeholder="Your Name">
+        </div>
+        <div class="question" id="question2">
+            <h2 id="labelAge"></h2>
+            <input type="text" id="answerAge" placeholder="Your Age">
+        </div>
+        <div class="question" id="question3">
+            <h2 id="labelDisorder"></h2>
+            <input type="text" id="answerDisorder" placeholder="Speech or Language Disorders">
+        </div>
+        <div class="question" id="question4">
+            <h2 id="labelComments"></h2>
+            <textarea id="answerComments" placeholder="Describe Challenges"></textarea>
+        </div>
+        <div class="question" id="question5">
+            <h2 id="labelColor"></h2>
+            <input type="text" id="answerColor" placeholder="Favorite Color">
+        </div>
+        <div class="question" id="question6">
+            <h2 id="labelGoals"></h2>
+            <input type="text" id="answerGoals" placeholder="Therapy Goals">
+        </div>
+        <div class="question" id="question7">
+            <h2 id="labelActivities"></h2>
+            <input type="text" id="answerActivities" placeholder="Previous Activities">
+        </div>
+        <div class="question" id="question8">
+            <h2 id="labelFamily"></h2>
+            <input type="text" id="answerFamily" placeholder="Family Support">
+        </div>
+        <div class="question" id="question9">
+            <h2 id="labelDailyChallenges"></h2>
+            <input type="text" id="answerDailyChallenges" placeholder="Daily Challenges">
+        </div>
+        <div class="question" id="question10">
+            <h2 id="labelFeedback"></h2>
+            <textarea id="answerFeedback" placeholder="Additional Feedback"></textarea>
+        </div>
+
+        <div class="interactive">
+            <button onclick="previousQuestion()">Previous</button>
+            <button onclick="nextQuestion()">Next</button>
+            <button onclick="submitAnswers()">Submit All Answers</button>
+        </div>
+
+        <div class="game-buttons">
+            <button onclick="startReadThis()">Read This</button>
+            <button onclick="startSayHi()">Say Hi</button>
+            <button onclick="startTongueTwisters()">Tongue Twisters</button>
+            <button onclick="startStoryTelling()">Story Telling</button>
+        </div>
+
+        <div class="audio-controls">
+            <button onclick="startRecording()">Start Recording</button>
+            <button onclick="stopRecording()">Stop Recording</button>
+            <audio id="audioPlayback" controls></audio>
+        </div>
+    </div>
+
+    <script>
+        let language = localStorage.getItem('language') || 'en'; // Default language
+        let currentQuestion = 0;
+        const questions = document.querySelectorAll('.question');
+        const languagePopup = document.getElementById('languagePopup');
+        const questionnaire = document.getElementById('questionnaire');
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recognition;
+        
+        // Initialize Speech Recognition if supported
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.interimResults = false;
+            recognition.lang = language === 'hi' ? 'hi-IN' : (language === 'mr' ? 'mr-IN' : 'en-US');
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                alert('Recognized speech: ' + transcript);
+                // Implement logic to handle recognized speech
+            };
+            recognition.onerror = function(event) {
+                alert('Error occurred in speech recognition: ' + event.error);
+            };
+        } else {
+            alert('Speech recognition not supported in this browser.');
+        }
+
+        const languageTranslations = {
+            en: {
+                title: 'Welcome to the Speech Therapy Questionnaire',
+                question1: '1. What is your name? <span class="emoji">👋</span>',
+                question2: '2. How old are you? <span class="emoji">🎂</span>',
+                question3: '3. Do you have any speech or language disorders? <span class="emoji">🗣️</span>',
+                question4: '4. Please describe any challenges you face with speech or language: <span class="emoji">📝</span>',
+                question5: '5. What is your favorite color? (This helps us customize your experience!) <span class="emoji">🎨</span>',
+                question6: '6. What are your goals for speech therapy? <span class="emoji">🎯</span>',
+                question7: '7. What speech therapy activities have you participated in before? <span class="emoji">🧩</span>',
+                question8: '8. How does your family support your speech therapy goals? <span class="emoji">👨‍👩‍👧‍👦</span>',
+                question9: '9. What daily challenges do you face with speech? <span class="emoji">🕒</span>',
+                question10: '10. Any additional comments or suggestions for speech therapy? <span class="emoji">💬</span>',
+            },
+            hi: {
+                title: 'भाषण चिकित्सा प्रश्नावली में आपका स्वागत है',
+                question1: '1. आपका नाम क्या है? <span class="emoji">👋</span>',
+                question2: '2. आपकी उम्र क्या है? <span class="emoji">🎂</span>',
+                question3: '3. क्या आपको कोई भाषण या भाषा संबंधी विकार हैं? <span class="emoji">🗣️</span>',
+                question4: '4. कृपया उन चुनौतियों का वर्णन करें जिनका आप भाषण या भाषा के साथ सामना करते हैं: <span class="emoji">📝</span>',
+                question5: '5. आपका पसंदीदा रंग क्या है? (यह हमें आपका अनुभव अनुकूलित करने में मदद करता है!) <span class="emoji">🎨</span>',
+                question6: '6. भाषण चिकित्सा के लिए आपके लक्ष्य क्या हैं? <span class="emoji">🎯</span>',
+                question7: '7. आपने पहले कौन-कौन सी भाषण चिकित्सा गतिविधियों में भाग लिया है? <span class="emoji">🧩</span>',
+                question8: '8. आपका परिवार आपके भाषण चिकित्सा लक्ष्यों का समर्थन कैसे करता है? <span class="emoji">👨‍👩‍👧‍👦</span>',
+                question9: '9. आप भाषण के साथ कौन-कौन सी दैनिक चुनौतियों का सामना करते हैं? <span class="emoji">🕒</span>',
+                question10: '10. भाषण चिकित्सा के लिए कोई अतिरिक्त प्रतिक्रिया या सुझाव? <span class="emoji">💬</span>',
+            },
+            mr: {
+                title: 'भाषण चिकित्सा प्रश्नावलीमध्ये आपले स्वागत आहे',
+                question1: '1. आपले नाव काय आहे? <span class="emoji">👋</span>',
+                question2: '2. आपले वय काय आहे? <span class="emoji">🎂</span>',
+                question3: '3. आपल्याला कोणते भाषण किंवा भाषा संबंधी विकार आहेत का? <span class="emoji">🗣️</span>',
+                question4: '4. कृपया आपल्याला भाषण किंवा भाषा संबंधित कोणत्या आव्हानांचा सामना करावा लागतो हे वर्णन करा: <span class="emoji">📝</span>',
+                question5: '5. आपला आवडता रंग कोणता आहे? (यामुळे आम्हाला आपला अनुभव सानुकूलित करण्यात मदत होईल!) <span class="emoji">🎨</span>',
+                question6: '6. भाषण चिकित्सा साठी आपले उद्दिष्ट काय आहेत? <span class="emoji">🎯</span>',
+                question7: '7. आपण पूर्वी कोणत्या भाषण चिकित्सा क्रियाकलापांमध्ये भाग घेतला आहे? <span class="emoji">🧩</span>',
+                question8: '8. आपले कुटुंब आपल्याला भाषण चिकित्सा उद्दिष्टे कशाप्रकारे समर्थन करते? <span class="emoji">👨‍👩‍👧‍👦</span>',
+                question9: '9. आपल्याला भाषणासोबत कोणत्याही दैनंदिन आव्हानांचा सामना करावा लागतो का? <span class="emoji">🕒</span>',
+                question10: '10. भाषण चिकित्सा साठी कोणती अतिरिक्त टिप्पण्या किंवा सूचना? <span class="emoji">💬</span>',
+            },
+            // Add other languages as needed
+        };
+
+        function setLanguage(selectedLanguage) {
+            language = selectedLanguage;
+            localStorage.setItem('language', language);
+            updateQuestions();
+            languagePopup.classList.remove('active');
+            questionnaire.style.display = 'block';
+        }
+
+        function updateQuestions() {
+            document.getElementById('questionTitle').innerHTML = languageTranslations[language].title;
+            questions.forEach((question, index) => {
+                if (languageTranslations[language][`question${index + 1}`]) {
+                    question.querySelector('h2').innerHTML = languageTranslations[language][`question${index + 1}`];
+                }
+            });
+        }
+
+        function showQuestion(index) {
+            questions.forEach((q, i) => {
+                q.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function submitAnswers() {
+            alert('Thank you for your responses!');
+            // Implement logic to save or send responses
+            console.log({
+                name: document.getElementById('answerName').value,
+                age: document.getElementById('answerAge').value,
+                disorder: document.getElementById('answerDisorder').value,
+                comments: document.getElementById('answerComments').value,
+                color: document.getElementById('answerColor').value,
+                goals: document.getElementById('answerGoals').value,
+                activities: document.getElementById('answerActivities').value,
+                family: document.getElementById('answerFamily').value,
+                dailyChallenges: document.getElementById('answerDailyChallenges').value,
+                feedback: document.getElementById('answerFeedback').value
+            });
+        }
+
+        function startReadThis() {
+            alert('Game: Read This');
+            recordAndRecognizeSpeech('Read this sentence aloud: "The quick brown fox jumps over the lazy dog."');
+        }
+
+        function startSayHi() {
+            alert('Game: Say Hi');
+            recordAndRecognizeSpeech('Say "Hi" and introduce yourself.');
+        }
+
+        function startTongueTwisters() {
+            alert('Game: Tongue Twisters');
+            recordAndRecognizeSpeech('Repeat this tongue twister: "She sells sea shells by the sea shore."');
+        }
+
+        function startStoryTelling() {
+            alert('Game: Story Telling');
+            recordAndRecognizeSpeech('Tell a short story about your favorite animal.');
+        }
+
+        function recordAndRecognizeSpeech(prompt) {
+            alert(prompt);
+            recordAudio(); // Record user speech
+            if (recognition) {
+                recognition.start();
+            }
+            setTimeout(() => {
+                alert('Speech recognition complete. Implement recognition logic here.');
+            }, 3000); // Simulate delay for recognition
+        }
+
+        function recordAudio() {
+            if (isRecording) return;
+            isRecording = true;
+            let constraints = { audio: true };
+            navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.start();
+                mediaRecorder.ondataavailable = function(event) {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = function() {
+                    let audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    let audioUrl = URL.createObjectURL(audioBlob);
+                    document.getElementById('audioPlayback').src = audioUrl;
+                    document.getElementById('audioPlayback').style.display = 'block';
+                    audioChunks = [];
+                    stream.getTracks().forEach(track => track.stop());
+                    isRecording = false;
+                };
+            });
+        }
+
+        function startRecording() {
+            recordAudio();
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+            }
+        }
+
+        // Show the first question initially
+        showQuestion(currentQuestion);
+    </script>
+</body>
+</html>

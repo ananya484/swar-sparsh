@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnerships</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-color: #f0f4f8;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background: #00796b;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .navbar a:hover {
+            background: #004d40;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-content h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #00796b;
+        }
+        .main-content p {
+            font-size: 1.2em;
+            color: #333;
+        }
+        .partners-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .partners-list li {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .partners-list li:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .partners-list a {
+            color: #00796b;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .partners-list a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background: #00796b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <a href="therapist.html">Back to Therapist Dashboard</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2>Our Partnerships</h2>
+            <p>We are proud to collaborate with the following organizations:</p>
+            <ul class="partners-list" id="partnersList">
+                <!-- Partner links will be added dynamically here -->
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html">Contact Us</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Array of partners
+        const partners = [
+            { name: 'Practo', url: 'https://www.practo.com/search/doctors?results_type=doctor&q=%5B%7B%22word%22%3A%22speech%20therapist%22%2C%22autocompleted%22%3Atrue%2C%22category%22%3A%22subspeciality%22%7D%5D&city=Pune' },
+            { name: 'Clinical Psychologists Network', url: 'https://www.cpn.com' },
+            { name: 'Speech Therapy Experts', url: 'https://www.ste.com' },
+            { name: 'Global Health Organization', url: 'https://www.gho.com' },
+            { name: 'Wellness Center', url: 'https://www.wellnesscenter.com' }
+        ];
+
+        // Function to render partners list
+        function renderPartners() {
+            const partnersList = document.getElementById('partnersList');
+            partners.forEach(partner => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a href="${partner.url}" target="_blank">${partner.name}</a>`;
+                partnersList.appendChild(listItem);
+            });
+        }
+
+        // Call the function to render partners
+        renderPartners();
+    </script>
+</body>
+</html>

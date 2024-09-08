@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-color: #e0f7fa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background: #00796b;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .navbar a:hover {
+            background: #004d40;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .footer {
+            background: #00796b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+            width: 100%;
+            max-width: 600px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #c8e6c9;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #004d40;
+        }
+        .profile-img-container {
+            margin: 20px 0;
+        }
+        .profile-img-container img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <a href="patient.html">Back to Dashboard</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1>Profile</h1>
+            <form id="profileForm">
+                <div class="profile-img-container">
+                    <img id="profileImg" src="default-profile.png" alt="Profile Image">
+                    <input type="file" id="profileImageUpload" accept="image/*">
+                </div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Enter your name" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+                <label for="age">Age:</label>
+                <input type="number" id="age" placeholder="Enter your age" required>
+                <label for="reason">Reason for Therapy:</label>
+                <input type="text" id="reason" placeholder="Enter reason" required>
+                <button type="submit">Update Profile</button>
+            </form>
+            <script>
+                // Load profile data from local storage
+                function loadProfile() {
+                    const profile = JSON.parse(localStorage.getItem('profile')) || {};
+                    document.getElementById('name').value = profile.name || '';
+                    document.getElementById('email').value = profile.email || '';
+                    document.getElementById('password').value = profile.password || '';
+                    document.getElementById('age').value = profile.age || '';
+                    document.getElementById('reason').value = profile.reason || '';
+                    if (profile.image) {
+                        document.getElementById('profileImg').src = profile.image;
+                    }
+                }
+
+                // Save profile data to local storage
+                document.getElementById('profileForm').addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const age = document.getElementById('age').value;
+                    const reason = document.getElementById('reason').value;
+
+                    const profile = {
+                        name,
+                        email,
+                        password,
+                        age,
+                        reason
+                    };
+
+                    localStorage.setItem('profile', JSON.stringify(profile));
+                    alert('Profile updated successfully!');
+                });
+
+                // Handle profile image upload
+                document.getElementById('profileImageUpload').addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('profileImg').src = e.target.result;
+                            // Save image data to local storage (as a URL)
+                            const profile = JSON.parse(localStorage.getItem('profile')) || {};
+                            profile.image = e.target.result;
+                            localStorage.setItem('profile', JSON.stringify(profile));
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Initialize profile page
+                loadProfile();
+            </script>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html">Contact Us</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: COMIC SANS MS;
+            height: 100%;
+            background-color: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            background:#006bb3 ;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: BLACK;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            background:  #99d6ff;
+            transition: background 0.3s, transform 0.3s;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .navbar a:hover {
+            background: #002f1d;
+            transform: scale(1.05);
+        }
+        .navbar .active {
+            background: linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3);
+        }
+        .navbar img {
+            width: 24px;
+            height: 24px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background:linear-gradient(to bottom,#ffffff, #99d6ff,#006bb3) ;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .main-content h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        .main-content p {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40PX 0;
+            padding: 50PX;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            position: relative;
+        }
+
+        .info-section div {
+            width: 55%;
+            text-align: left;
+        }
+
+        .info-section img {
+            max-width: 100%;
+            border-radius: 10px;
+            height: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-section::before {
+            content: '✨';
+            font-size: 4rem;
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            opacity: 0.5;
+        }
+        .profile-link {
+            background-color: #0275d8;
+            color: white;
+            padding: 1rem;
+            font-size: 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: block;
+            width: fit-content;
+            margin: 2rem auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .profile-link:hover {
+            background-color: #025aa5;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: #006bb3;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .logout-button {
+            background: #006bb3;
+            color: BLACK;
+            border: none;
+            padding: 20px 10px;
+            font-size: 28px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .logout-button:hover {
+            background: #e64a19;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <a href="games.html"><img src="icons/games.png" alt="Games Icon"> Games</a>
+            <a href="video_call.html"><img src="icons/video-call.png" alt="Video Call Icon"> Video Call</a>
+            <a href="chatbot.html"><img src="icons/chatbot.png" alt="Chatbot Icon"> Chatbot</a>
+            <a href="partnerinteraction.html"><img src="icons/partner.png" alt="Partner Interaction Icon"> Partner Interaction</a>
+            <a href="uploadandanswer.html"><img src="icons/upload.png" alt="Upload & Answer Icon"> Upload & Answer</a>
+            <a href="discussionforum.html"><img src="icons/forum.png" alt="Discussion Forum Icon"> Discussion Forum</a>
+            <a href="profile.html"><img src="icons/profile.png" alt="Profile Icon"> Profile</a>
+            <a href="partnerships2.html" onclick="showSection('notes')"><img src="icons/doctors2.png" alt="doctors Icon">Search Doctors</a>
+            <a href="contact_us.html"><img src="icons/contact.png" alt="Contact Us Icon"> Contact Us</a>
+            <button class="logout-button" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Manage your therapy and interact with your therapist.</p>
+            <a href="profile.html" class="questionnaire-link">check the steps below!!</a>
+
+            <!-- Information Section 1 -->
+            <div class="info-section">
+                <div>
+                    <p>Welcome back to your personalized therapy space. This dashboard is designed to keep you informed and engaged with your therapy journey. Here, you can track your progress, review upcoming appointments, and access useful resources tailored to your needs. Explore recommended exercises that are tailored to your therapy needs. Each exercise comes with clear instructions and options to start immediately. You can also review the exercises you’ve completed recently, making it easy to track your progress and stay motivated. If you have any questions or require further assistance, you can reach out to your therapist directly through our contact form or schedule an additional appointment. We’re here to support you every step of the way.
+                    For any help navigating your dashboard or addressing concerns, our support team is available to assist you. You can contact them via email or phone, and we’ll ensure your queries are promptly addressed.</p>
+                    <!-- Profile Section -->
+                    <a href="profile.html" class="questionnaire-link">check the steps below!!!!!!!</a>
+                </div>
+                <img src="images/about-us2.png" alt="About Us 2 Image">
+            </div>
+
+            <!-- New Information Section for Website Flow -->
+            <div class="info-section">
+                <div>
+                    <h2>Website Flow and Steps</h2>
+                    <p>Our platform is designed to provide a seamless experience for managing your therapy sessions and resources. Here's how you can navigate the website:</p>
+                    <ol>
+                        <li>Start by filling out your profile to provide us with essential information that helps tailor the therapy sessions to your needs.</li>
+                        <li>Access various therapy games from the dashboard to improve your speech and communication skills.</li>
+                        <li>Join video calls with your therapist for live, interactive sessions.</li>
+                        <li>Use the chatbot feature to have a conversation or get instant support whenever needed.</li>
+                        <li>Interact with partners and explore additional resources through the partner interaction section.</li>
+                        <li>Upload documents and answer questionnaires for your therapist to review.</li>
+                        <li>Engage in discussions in our forum, where you can share your experiences and learn from others.</li>
+                        <li>Search for doctors and specialists through our easy-to-use search function.</li>
+                        <li>If you need any help or have questions, visit the Contact Us page to get in touch with us.</li>
+                    </ol>
+                    <p>Follow these steps to make the most out of your therapy journey on our platform. We’re committed to providing you with the best tools and support for your needs.</p>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html">Contact Us</a></p>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            // Clear user session or cookies if any
+            // Redirect to login page or show a message
+            alert("You have been logged out.");
+            window.location.href = "login.html";
+        }
+    </script>
+</body>
+</html>

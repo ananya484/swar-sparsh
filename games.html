@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games for Speech Therapy</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background: #f0f4f7;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            background: #0275d8;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .navbar a:hover {
+            background: #025aa5;
+        }
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+            background: white;
+            color: #333;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+        button {
+            padding: 12px 20px;
+            background: #0275d8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: #025aa5;
+            transform: scale(1.05);
+        }
+        .game-container {
+            margin: 20px auto;
+            max-width: 100%;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .game-container img {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .game-container .feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .game-container #speechOutput {
+            margin-top: 20px;
+        }
+        .game-container #downloadLink {
+            margin-top: 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <a href="patient.html">Back to Dashboard</a>
+            <a href="chatbot.html">Chat with Bot</a>
+        </div>
+
+        <!-- Games Content -->
+        <div class="main-content">
+            <h2>Games for Speech Therapy</h2>
+            <p>Engage in interactive games to enhance your speech therapy.</p>
+            <div class="game-container" id="gameArea">
+                <label for="ageInput">Enter Age:</label>
+                <input type="number" id="ageInput" min="1" max="70" placeholder="Enter age here">
+                <button onclick="startGame()">Start Game</button>
+                <div id="gameOutput"></div>
+
+                <h3>Speech Recognition</h3>
+                <button onclick="startSpeechRecognition()">Start Speech Recognition</button>
+                <button onclick="stopSpeechRecognition()">Stop Speech Recognition</button>
+                <div id="speechOutput"></div>
+
+                <h3>Audio Recording</h3>
+                <button onclick="startRecording()">Start Recording</button>
+                <button onclick="stopRecording()">Stop Recording</button>
+                <a id="downloadLink" style="display: none;">Download MP3</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html" style="color: #ffffff;">Contact Us</a></p>
+        </div>
+    </div>
+
+    <script>
+        let recognition;
+        let recording = false;
+        let audioChunks = [];
+        let mediaRecorder;
+        let audioBlob;
+        let downloadLink = document.getElementById('downloadLink');
+
+        async function startGame() {
+            const age = document.getElementById('ageInput').value;
+            if (!age) {
+                document.getElementById('gameOutput').innerHTML = '<p>Please enter an age to start the game.</p>';
+                return;
+            }
+
+            const gameOutput = document.getElementById('gameOutput');
+            gameOutput.innerHTML = '<p>Loading game...</p>';
+
+            let gameContent = '';
+            if (age <= 5) {
+                gameContent = `
+                    <p>Game for ages 1-5: Animal Sounds Match.</p>
+                    <p>Click on the animals and listen to their sounds. Match the sounds with the correct animal:</p>
+                    <img src="lion.png" alt="Lion" onclick="playSound('lion')">
+                    <img src="elephant.png" alt="Elephant" onclick="playSound('elephant')">
+                    <div id="matchOutput" class="feedback"></div>
+                `;
+            } else if (age <= 10) {
+                gameContent = `
+                    <p>Game for ages 6-10: Story Completion.</p>
+                    <p>Listen to the beginning of a story and choose the best ending:</p>
+                    <p>"Once upon a time, a little bunny went to the forest and saw..."</p>
+                    <button onclick="chooseEnding('found_a_friends')">found some friends to play with.</button>
+                    <button onclick="chooseEnding('got_lost')">got lost in the forest.</button>
+                    <div id="storyFeedback" class="feedback"></div>
+                `;
+            } else if (age <= 15) {
+                gameContent = `
+                    <p>Game for ages 11-15: Word Association.</p>
+                    <p>Type a word and find related words:</p>
+                    <input type="text" id="wordInput" placeholder="Type a word here">
+                    <button onclick="findRelatedWords()">Find Related Words</button>
+                    <div id="relatedWordsOutput"></div>
+                `;
+            } else if (age <= 25) {
+                gameContent = `
+                    <p>Game for ages 16-25: Pronunciation Practice.</p>
+                    <p>Repeat the following sentence clearly:</p>
+                    <p>"She sells sea shells by the sea shore."</p>
+                    <button onclick="recordSentence()">Record Sentence</button>
+                `;
+            } else if (age <= 35) {
+                gameContent = `
+                    <p>Game for ages 26-35: Speech Fluency.</p>
+                    <p>Read this passage aloud and record yourself:</p>
+                    <p>"The quick brown fox jumps over the lazy dog."</p>
+                    <button onclick="recordReading()">Record Reading</button>
+                `;
+            } else if (age <= 50) {
+                gameContent = `
+                    <p>Game for ages 36-50: Articulation Practice.</p>
+                    <p>Pronounce the following sentence:</p>
+                    <p>"Sally sold seashells by the seashore."</p>
+                    <button onclick="recordArticulation()">Record Articulation</button>
+                `;
+            } else if (age <= 70) {
+                gameContent = `
+                    <p>Game for ages 51-70: Comprehension Quiz.</p>
+                    <p>Listen to the passage and answer the questions below:</p>
+                    <p>"Once upon a time, in a land far away..."</p>
+                    <button onclick="answerQuestion()">Answer Questions</button>
+                `;
+            }
+
+            gameOutput.innerHTML = gameContent;
+        }
+
+        function playSound(animal) {
+            const sounds = {
+                lion: 'lion-roar.mp3',
+                elephant: 'elephant-trumpet.mp3'
+            };
+            const audio = new Audio(sounds[animal]);
+            audio.play();
+        }
+
+        function chooseEnding(ending) {
+            const storyFeedback = document.getElementById('storyFeedback');
+            if (ending === 'found_a_friends') {
+                storyFeedback.innerHTML = '<p>Great choice! The bunny had a wonderful time with friends.</p>';
+            } else {
+                storyFeedback.innerHTML = '<p>Oh no! The bunny got lost but found its way home.</p>';
+            }
+        }
+
+        function findRelatedWords() {
+            const word = document.getElementById('wordInput').value;
+            const relatedWords = {
+                'apple': ['fruit', 'red', 'sweet'],
+                'dog': ['pet', 'bark', 'loyal']
+            };
+            const output = relatedWords[word] ? relatedWords[word].join(', ') : 'No related words found.';
+            document.getElementById('relatedWordsOutput').innerText = `Related words: ${output}`;
+        }
+
+        function startSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                document.getElementById('speechOutput').innerText = 'Speech recognition not supported.';
+                return;
+            }
+
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('speechOutput').innerText = `You said: ${transcript}`;
+            };
+            recognition.start();
+        }
+
+        function stopSpeechRecognition() {
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = function(event) {
+                        audioChunks.push(event.data);
+                    };
+                    mediaRecorder.start();
+                    recording = true;
+                })
+                .catch(err => console.error('Error accessing microphone: ', err));
+        }
+
+        function stopRecording() {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                recording = false;
+                mediaRecorder.onstop = function() {
+                    audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    const url = URL.createObjectURL(audioBlob);
+                    downloadLink.href = url;
+                    downloadLink.style.display = 'block';
+                    downloadLink.download = 'recording.mp3';
+                };
+            }
+        }
+
+        function downloadRecording() {
+            if (audioBlob) {
+                const url = URL.createObjectURL(audioBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'recording.mp3';
+                a.click();
+            }
+        }
+    </script>
+</body>
+</html>

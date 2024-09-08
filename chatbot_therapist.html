@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapist Chatbot</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            height: 100%;
+            background-color: #e0f7fa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background: #00796b;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .navbar a:hover {
+            background: #004d40;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .chatbox {
+            width: 80%;
+            max-width: 800px;
+            height: 400px;
+            background: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow-y: auto;
+            padding: 10px;
+            position: relative;
+        }
+        .chatbox-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .chatbox-content .message {
+            background: #00796b;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 60%;
+            word-wrap: break-word;
+        }
+        .chatbox textarea {
+            width: 100%;
+            height: 50px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chatbox button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chatbox button:hover {
+            background: #004d40;
+        }
+        .footer {
+            background: #00796b;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="navbar">
+            <a href="therapist.html">Back to Dashboard</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2>Therapist Chat with Patient Bot</h2>
+            <div id="chatbox" class="chatbox"></div>
+            <textarea id="therapistMessage" placeholder="Type a message"></textarea>
+            <button onclick="sendTherapistMessage()">Send</button>
+            <button onclick="saveChat()">Save Chat</button>
+            <button onclick="deleteChat()">Delete Chat</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Speech Therapy Platform | <a href="contact_us.html">Contact Us</a></p>
+        </div>
+    </div>
+
+    <script>
+        let patientMessages = []; // Array to simulate shared message storage
+
+        function sendTherapistMessage() {
+            const chatbox = document.getElementById('chatbox');
+            const therapistMessage = document.getElementById('therapistMessage').value;
+
+            if (therapistMessage.trim() === '') return;
+
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chatbox-content');
+            messageElement.innerHTML = `<div class="message">Therapist: ${therapistMessage}</div>`;
+            chatbox.appendChild(messageElement);
+            document.getElementById('therapistMessage').value = '';
+
+            // Send message to patient
+            sendToPatient(therapistMessage);
+        }
+
+        function sendToPatient(message) {
+            // Simulate sending a message to the patient
+            patientMessages.push({ sender: 'Therapist', message: message });
+            localStorage.setItem('therapistMessages', JSON.stringify(patientMessages));
+        }
+
+        function checkForPatientMessages() {
+            // Check for new messages from the patient
+            const messages = JSON.parse(localStorage.getItem('therapistMessages') || '[]');
+            if (messages.length > patientMessages.length) {
+                messages.slice(patientMessages.length).forEach(msg => {
+                    displayMessage(msg.sender, msg.message);
+                });
+                patientMessages = messages;
+            }
+        }
+
+        function displayMessage(sender, message) {
+            const chatbox = document.getElementById('chatbox');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chatbox-content');
+            messageElement.innerHTML = `<div class="message"><strong>${sender}:</strong> ${message}</div>`;
+            chatbox.appendChild(messageElement);
+        }
+
+        function saveChat() {
+            const chatbox = document.getElementById('chatbox');
+            const chatContent = chatbox.innerText;
+
+            const blob = new Blob([chatContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat_history.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function deleteChat() {
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML = '';
+            localStorage.removeItem('therapistMessages');
+            patientMessages = [];
+        }
+
+        // Continuously check for new messages
+        setInterval(checkForPatientMessages, 1000);
+    </script>
+</body>
+</html>
